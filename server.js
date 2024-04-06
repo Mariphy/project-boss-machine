@@ -39,22 +39,52 @@ const sendAllFromDatabase = (req, res, next) => {
   res.send(getAllFromDatabase(dataType));
 };
 
-const sendFromDatabaseById = (req, res, next) => {
+/*const sendFromDatabaseById = (req, res, next) => {
   const dataType = req.path.split('/')[1];
-  res.send(getFromDatabaseById(dataType, req.params.minionId))
+  res.send(getFromDatabaseById(dataType, req.params.id))
 };
 
+const deleteById = (req, res, next) => {
+  const dataType = req.path.split('/')[1];
+  deleteFromDatabasebyId(dataType, req.params.id);
+}*/
+
+//minions
 apiRouter.get('/minions', sendAllFromDatabase);
 apiRouter.post('/minions', (req, res, next) => {
   res.send(addToDatabase('minions', req.body));
 });
-apiRouter.get('/minions/:minionId', sendFromDatabaseById);
+apiRouter.get('/minions/:minionId', (req, res, next) => {
+  res.send(getFromDatabaseById('minions', req.params.minionId))
+});
+apiRouter.put('/minions/:minionId', (req, res, next) => {
+  res.send(updateInstanceInDatabase('minions', req.body))
+});
+apiRouter.delete('/minions/:minionId', (req, res, next) => {
+  res.send(deleteFromDatabasebyId('minions', req.params.minionId));
+});
+
+//ideas
 apiRouter.get('/ideas', sendAllFromDatabase);
-apiRouter.get('/ideas/:ideaId', sendFromDatabaseById);
+apiRouter.get('/ideas/:ideaId', (req, res, next) => {
+  res.send(getFromDatabaseById('ideas', req.params.ideaId))
+});
+apiRouter.post('/ideas', (req, res, next) => {
+  res.send(addToDatabase('ideas', req.body));
+});
+apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+  res.send(updateInstanceInDatabase('ideas', req.body))
+});
+apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
+  res.send(deleteFromDatabasebyId('ideas', req.params.ideaId));
+});
+
+//meetings
 apiRouter.get('/meetings', sendAllFromDatabase);
 apiRouter.post('/meetings', (req, res, next) => {
   res.send(createMeeting());
 });
+apiRouter.delete('/meetings', deleteAllFromDatabase('meetings'));
 
 
 // This conditional is here for testing purposes:
