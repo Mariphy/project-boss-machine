@@ -39,16 +39,6 @@ const sendAllFromDatabase = (req, res, next) => {
   res.send(getAllFromDatabase(dataType));
 };
 
-/*const sendFromDatabaseById = (req, res, next) => {
-  const dataType = req.path.split('/')[1];
-  res.send(getFromDatabaseById(dataType, req.params.id))
-};
-
-const deleteById = (req, res, next) => {
-  const dataType = req.path.split('/')[1];
-  deleteFromDatabasebyId(dataType, req.params.id);
-}*/
-
 //minions
 apiRouter.get('/minions', sendAllFromDatabase);
 apiRouter.post('/minions', (req, res, next) => {
@@ -112,10 +102,12 @@ apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
 //meetings
 apiRouter.get('/meetings', sendAllFromDatabase);
 apiRouter.post('/meetings', (req, res, next) => {
-  res.send(createMeeting());
+  let newMeeting = addToDatabase('meetings', createMeeting());
+  res.status(201).send(newMeeting);
 });
-apiRouter.delete('/meetings', deleteAllFromDatabase('meetings'));
-
+apiRouter.delete('/meetings', (req, res, next) => {
+  res.status(204).send(deleteAllFromDatabase('meetings'));
+});
 
 // This conditional is here for testing purposes:
 if (!module.parent) { 
