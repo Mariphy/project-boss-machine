@@ -14,6 +14,8 @@ const { createMeeting,
   deleteFromDatabasebyId,
   deleteAllFromDatabase } = require('./server/db.js');
 
+const {checkMillionDollarIdea} = require('./server/checkMillionDollarIdea.js');
+
 /* Do not change the following line! It is required for testing and allowing
 *  the frontend application to interact as planned with the api server
 */
@@ -79,10 +81,12 @@ apiRouter.get('/ideas/:ideaId', (req, res, next) => {
     res.status(404).send();
   }
 });
-apiRouter.post('/ideas', (req, res, next) => {
-  res.status(201).send(addToDatabase('ideas', req.body));
+console.log(checkMillionDollarIdea);
+apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
+  const newIdea = addToDatabase('ideas', req.body);
+  res.status(201).send(newIdea);
 });
-apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+apiRouter.put('/ideas/:ideaId', checkMillionDollarIdea, (req, res, next) => {
   const updatedIdea = updateInstanceInDatabase('ideas', req.body);
   if (updatedIdea === null) {
     res.status(404).send();
