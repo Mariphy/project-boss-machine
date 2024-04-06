@@ -55,10 +55,20 @@ apiRouter.post('/minions', (req, res, next) => {
   res.send(addToDatabase('minions', req.body));
 });
 apiRouter.get('/minions/:minionId', (req, res, next) => {
-  res.send(getFromDatabaseById('minions', req.params.minionId))
+  const foundMinion = getFromDatabaseById('minions', req.params.minionId);
+  if (foundMinion) {
+    res.send(foundMinion);
+  } else {
+    res.status(404).send();
+  }
 });
 apiRouter.put('/minions/:minionId', (req, res, next) => {
-  res.send(updateInstanceInDatabase('minions', req.body))
+  const updatedMinion = updateInstanceInDatabase('minions', req.body);
+  if (updatedMinion === null) {
+    res.status(404).send();
+  } else {
+    res.send(updatedMinion);
+  }
 });
 apiRouter.delete('/minions/:minionId', (req, res, next) => {
   res.send(deleteFromDatabasebyId('minions', req.params.minionId));
@@ -67,13 +77,23 @@ apiRouter.delete('/minions/:minionId', (req, res, next) => {
 //ideas
 apiRouter.get('/ideas', sendAllFromDatabase);
 apiRouter.get('/ideas/:ideaId', (req, res, next) => {
-  res.send(getFromDatabaseById('ideas', req.params.ideaId))
+  const foundIdea = getFromDatabaseById('ideas', req.params.ideaId);
+  if (foundIdea) {
+    res.send(foundIdea);
+  } else {
+    res.status(404).send();
+  }
 });
 apiRouter.post('/ideas', (req, res, next) => {
   res.send(addToDatabase('ideas', req.body));
 });
 apiRouter.put('/ideas/:ideaId', (req, res, next) => {
-  res.send(updateInstanceInDatabase('ideas', req.body))
+  const updatedIdea = updateInstanceInDatabase('ideas', req.body);
+  if (updatedIdea === null) {
+    res.status(404).send();
+  } else {
+    res.send(updatedIdea);
+  }
 });
 apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
   res.send(deleteFromDatabasebyId('ideas', req.params.ideaId));
