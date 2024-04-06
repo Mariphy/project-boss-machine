@@ -14,7 +14,17 @@ const { createMeeting,
   deleteFromDatabasebyId,
   deleteAllFromDatabase } = require('./server/db.js');
 
-const {checkMillionDollarIdea} = require('./server/checkMillionDollarIdea.js');
+const checkMillionDollarIdea = require('./server/checkMillionDollarIdea.js');
+
+/*const checkMillionDollarIdea = (req, res, next) => {
+  let numWeeks = Number(req.params.numWeeks);
+  let weeklyRevenue = Number(req.params.weeklyRevenue);
+  if (isNaN(numWeeks) || isNaN(weeklyRevenue) || (numWeeks * weeklyRevenue) < 1000000) {
+      res.status(400).send();
+  } else {
+    next();
+  }
+};*/
 
 /* Do not change the following line! It is required for testing and allowing
 *  the frontend application to interact as planned with the api server
@@ -81,7 +91,7 @@ apiRouter.get('/ideas/:ideaId', (req, res, next) => {
     res.status(404).send();
   }
 });
-console.log(checkMillionDollarIdea);
+//console.log(checkMillionDollarIdea);
 apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
   const newIdea = addToDatabase('ideas', req.body);
   res.status(201).send(newIdea);
