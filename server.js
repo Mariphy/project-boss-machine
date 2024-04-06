@@ -52,7 +52,7 @@ const deleteById = (req, res, next) => {
 //minions
 apiRouter.get('/minions', sendAllFromDatabase);
 apiRouter.post('/minions', (req, res, next) => {
-  res.send(addToDatabase('minions', req.body));
+  res.status(201).send(addToDatabase('minions', req.body));
 });
 apiRouter.get('/minions/:minionId', (req, res, next) => {
   const foundMinion = getFromDatabaseById('minions', req.params.minionId);
@@ -71,7 +71,12 @@ apiRouter.put('/minions/:minionId', (req, res, next) => {
   }
 });
 apiRouter.delete('/minions/:minionId', (req, res, next) => {
-  res.send(deleteFromDatabasebyId('minions', req.params.minionId));
+  const deletedMinion = deleteFromDatabasebyId('minions', req.params.minionId);
+  if (deletedMinion === true) {
+    res.status(204).send();
+  } else {
+    res.status(404).send();
+  }
 });
 
 //ideas
@@ -85,7 +90,7 @@ apiRouter.get('/ideas/:ideaId', (req, res, next) => {
   }
 });
 apiRouter.post('/ideas', (req, res, next) => {
-  res.send(addToDatabase('ideas', req.body));
+  res.status(201).send(addToDatabase('ideas', req.body));
 });
 apiRouter.put('/ideas/:ideaId', (req, res, next) => {
   const updatedIdea = updateInstanceInDatabase('ideas', req.body);
@@ -96,7 +101,12 @@ apiRouter.put('/ideas/:ideaId', (req, res, next) => {
   }
 });
 apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
-  res.send(deleteFromDatabasebyId('ideas', req.params.ideaId));
+  const deletedIdea = deleteFromDatabasebyId('ideas', req.params.ideaId);
+  if (deletedIdea === true) {
+    res.status(204).send();
+  } else {
+    res.status(404).send();
+  }
 });
 
 //meetings
