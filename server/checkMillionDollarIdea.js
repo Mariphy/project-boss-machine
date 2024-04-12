@@ -1,10 +1,12 @@
 const checkMillionDollarIdea = (req, res, next) => {
     let numWeeks = Number(req.params.numWeeks);
     let weeklyRevenue = Number(req.params.weeklyRevenue);
-    if (isNaN(numWeeks) || isNaN(weeklyRevenue) || (numWeeks * weeklyRevenue) < 1000000) {
-        res.status(400).send();
-    } else {
+    if ((numWeeks * weeklyRevenue) >= 1000000) {
+      req.numWeeks = numWeeks;
+      req.weeklyRevenue = weeklyRevenue;
       next();
+    } else {
+      res.status(400).send();
     }
 };
 
