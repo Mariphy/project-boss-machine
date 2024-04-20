@@ -1,12 +1,12 @@
 const checkMillionDollarIdea = (req, res, next) => {
-    let numWeeks = Number(req.params.numWeeks);
-    let weeklyRevenue = Number(req.params.weeklyRevenue);
-    if ((numWeeks * weeklyRevenue) >= 1000000) {
-      req.numWeeks = numWeeks;
-      req.weeklyRevenue = weeklyRevenue;
-      next();
-    } else {
+    let numWeeks = req.body.numWeeks;
+    let weeklyRevenue = req.body.weeklyRevenue;
+    if ((Number(numWeeks) * Number(weeklyRevenue)) < 1000000 || !numWeeks || !weeklyRevenue) {
+      console.log('not passed')
       res.status(400).send();
+    } else {
+      console.log('passed')
+      next();
     }
 };
 

@@ -91,19 +91,6 @@ apiRouter.get('/ideas/:ideaId', (req, res, next) => {
     res.status(404).send();
   }
 });
-//console.log(checkMillionDollarIdea);
-apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
-  const newIdea = addToDatabase('ideas', req.body);
-  res.status(201).send(newIdea);
-});
-apiRouter.put('/ideas/:ideaId', checkMillionDollarIdea, (req, res, next) => {
-  const updatedIdea = updateInstanceInDatabase('ideas', req.body);
-  if (updatedIdea === null) {
-    res.status(404).send();
-  } else {
-    res.send(updatedIdea);
-  }
-});
 apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
   const deletedIdea = deleteFromDatabasebyId('ideas', req.params.ideaId);
   if (deletedIdea === true) {
@@ -112,6 +99,20 @@ apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
     res.status(404).send();
   }
 });
+apiRouter.use(['/ideas', '/ideas:ideaId'], checkMillionDollarIdea);
+apiRouter.post('/ideas', (req, res, next) => {
+  const newIdea = addToDatabase('ideas', req.body);
+  res.status(201).send(newIdea);
+});
+apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+  const updatedIdea = updateInstanceInDatabase('ideas', req.body);
+  if (updatedIdea === null) {
+    res.status(404).send();
+  } else {
+    res.send(updatedIdea);
+  }
+});
+
 
 //meetings
 apiRouter.get('/meetings', sendAllFromDatabase);
