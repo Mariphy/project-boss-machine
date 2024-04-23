@@ -72,7 +72,7 @@ apiRouter.delete('/minions/:minionId', (req, res, next) => {
 });
 
 //ideas
-apiRouter.param('/ideas/:ideaId', (req, res, next, id) => {
+apiRouter.param('ideaId', (req, res, next, id) => {
   const idea = getFromDatabaseById('ideas', id);
   if (idea) {
     req.idea = idea;
@@ -99,19 +99,13 @@ apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
   }
 });
 
-apiRouter.use(['/ideas', '/ideas:ideaId'], checkMillionDollarIdea);
-
-apiRouter.post('/ideas', (req, res, next) => {
+apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
   const newIdea = addToDatabase('ideas', req.body);
   res.status(201).send(newIdea);
 });
-apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+apiRouter.put('/ideas/:ideaId', checkMillionDollarIdea, (req, res, next) => {
   const updatedIdea = updateInstanceInDatabase('ideas', req.body);
-  if (updatedIdea === null) {
-    res.status(404).send();
-  } else {
-    res.send(updatedIdea);
-  }
+  res.send(updatedIdea);
 });
 
 
