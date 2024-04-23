@@ -16,16 +16,6 @@ const { createMeeting,
 
 const checkMillionDollarIdea = require('./server/checkMillionDollarIdea.js');
 
-/*const checkMillionDollarIdea = (req, res, next) => {
-  let numWeeks = Number(req.params.numWeeks);
-  let weeklyRevenue = Number(req.params.weeklyRevenue);
-  if (isNaN(numWeeks) || isNaN(weeklyRevenue) || (numWeeks * weeklyRevenue) < 1000000) {
-      res.status(400).send();
-  } else {
-    next();
-  }
-};*/
-
 /* Do not change the following line! It is required for testing and allowing
 *  the frontend application to interact as planned with the api server
 */
@@ -82,6 +72,15 @@ apiRouter.delete('/minions/:minionId', (req, res, next) => {
 });
 
 //ideas
+apiRouter.param('/ideas/:ideaId', (req, res, next, id) => {
+  const idea = getFromDatabaseById('ideas', id);
+  if (idea) {
+    req.idea = idea;
+    next();
+  } else {
+    res.status(404).send();
+  }
+});
 apiRouter.get('/ideas', sendAllFromDatabase);
 apiRouter.get('/ideas/:ideaId', (req, res, next) => {
   const foundIdea = getFromDatabaseById('ideas', req.params.ideaId);
@@ -99,7 +98,9 @@ apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
     res.status(404).send();
   }
 });
+
 apiRouter.use(['/ideas', '/ideas:ideaId'], checkMillionDollarIdea);
+
 apiRouter.post('/ideas', (req, res, next) => {
   const newIdea = addToDatabase('ideas', req.body);
   res.status(201).send(newIdea);
