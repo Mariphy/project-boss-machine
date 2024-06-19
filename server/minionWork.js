@@ -1,7 +1,5 @@
 const minionsWorkRouter = require('express').Router();
 
-module.exports = minionsWorkRouter;
-
 const { 
     addToDatabase,
     getAllFromDatabase,
@@ -10,10 +8,27 @@ const {
     deleteFromDatabasebyId,
   } = require('./db');
 
-minionsWorkRouter.param()  
+minionsWorkRouter.get('/:minionId/work', (req, res) => {
+    const minionId = req.params.minionId;
+    //console.log(minionId);
+    const foundWork = getAllFromDatabase('work').filter((singleWork) => {
+      return singleWork.minionId === minionId;
+    });
+    //console.log(getAllFromDatabase('work'));
+    //console.log(foundWork);
+    if (foundWork === null) {
+      res.status(404).send();
+    } else if (foundWork.length === 0) {
+      res.status(404).send();
+    } else {
+      res.send(foundWork);
+    }
+});
 
-minionsWorkRouter.get('/', (req, res, next) => {
-    let foundWork = getFromDatabaseById('work', req.params.minionId);
+minionsWorkRouter.get('/:minionId/work/:workId', (req, res) => {
+    const minionId = req.params.minionId;
+    const workId = req.params.workId;
+    let foundWork = getFromDatabaseById('work', workId);
     if (foundWork) {
       res.send(foundWork);
     } else {
@@ -21,24 +36,40 @@ minionsWorkRouter.get('/', (req, res, next) => {
     }
 });
 
-minionsWorkRouter.get('/:workId', (req, res, next) => {
-    let foundWork = getFromDatabaseById('work', req.params.id);
-    if (foundWork) {
-      res.send(foundWork);
-    } else {
-      res.status(404).send();
-    }
+minionsWorkRouter.post('/:minionId/work', (req, res) => {
+  //console.log(req.body);
+  const newWork = addToDatabase('work', req.body);
+  //console.log(newWork);
+  res.status(201).send(newWork);
 });
 
-minionsWorkRouter.post('/', (req, res, next) => {
-    const newWork = addToDatabase('work', req.body);
-    res.status(201).send(newWork);
-})
-  /*minionsRouter.post('/', (req, res, next) => {
-    const newMinion = addToDatabase('minions', req.body);
-    res.status(201).send(newMinion);
-  });
-  
-  minionsRouter.get('/:minionId', (req, res, next) => {
-    res.send(req.minion);
-  });*/
+minionsWorkRouter.param('workId', (req, res, next, id) => {
+  const work = getFromDatabaseById('work', id);
+  if (work) {
+    req.work = work;
+    next();
+  } else {
+    res.status(404).send();
+  }
+});
+
+minionsWorkRouter.put('/:minionId/work/:workId', (req, res) => {
+  if (req.params.minionId !== req.body.minionId) {
+    res.status(400).send();
+  } else {
+    const updatedWork = updateInstanceInDatabase('work', req.body);
+    res.send(updatedWork);
+  }
+});
+
+minionsWorkRouter.delete('/:minionId/work/:workId', (req, res) => {
+  const deletedWork = deleteFromDatabasebyId('work', req.params.workId);
+  if (deletedWork === true) {
+    res.status(204).send();
+  } else {
+    res.status(404).send();
+  }
+});
+
+
+  module.exports = minionsWorkRouter;

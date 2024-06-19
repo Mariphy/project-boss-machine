@@ -3,6 +3,9 @@ const apiRouter = express.Router();
 
 const minionsWorkRouter = require('./minionWork');
 
-apiRouter.use('./minions/:minionId/work', minionsWorkRouter)
+apiRouter.use('/minions', minionsWorkRouter);
+
+
+
 
 module.exports = apiRouter;
