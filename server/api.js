@@ -11,44 +11,14 @@ const { createMeeting,
 
 const checkMillionDollarIdea = require('./checkMillionDollarIdea.js');
 
-const minionsWorkRouter = require('./minionWork');
+const minionsRouter = require('./minions.js');
 
-apiRouter.use('/minions', minionsWorkRouter);
+apiRouter.use('/minions', minionsRouter);
 
 const sendAllFromDatabase = (req, res, next) => {
     const dataType = req.path.split('/')[1];
     res.send(getAllFromDatabase(dataType));
 };
-  
-//minions
-apiRouter.get('/minions', sendAllFromDatabase);
-apiRouter.post('/minions', (req, res, next) => {
-res.status(201).send(addToDatabase('minions', req.body));
-});
-apiRouter.get('/minions/:minionId', (req, res, next) => {
-const foundMinion = getFromDatabaseById('minions', req.params.minionId);
-if (foundMinion) {
-    res.send(foundMinion);
-} else {
-    res.status(404).send();
-}
-});
-apiRouter.put('/minions/:minionId', (req, res, next) => {
-const updatedMinion = updateInstanceInDatabase('minions', req.body);
-if (updatedMinion === null) {
-    res.status(404).send();
-} else {
-    res.send(updatedMinion);
-}
-});
-apiRouter.delete('/minions/:minionId', (req, res, next) => {
-const deletedMinion = deleteFromDatabasebyId('minions', req.params.minionId);
-if (deletedMinion === true) {
-    res.status(204).send();
-} else {
-    res.status(404).send();
-}
-});
 
 //ideas
 apiRouter.param('ideaId', (req, res, next, id) => {
